@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import MapKit
 
-class MapViewController: UIViewController {
+class MapViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MKMapViewDelegate, LocationsViewControllerDelegate {
 
     @IBAction func onPlusClick(_ sender: Any) {
         self.performSegue(withIdentifier: "newBathroomSegue", sender: nil)

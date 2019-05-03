@@ -48,6 +48,12 @@ class SignUpViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func onClickCancel(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
     /*
     // MARK: - Navigation
 

@@ -98,6 +98,12 @@ class NewReviewViewController: UIViewController, UIImagePickerControllerDelegate
         current_rating = 5
     }
     
+    
+    
+    
+   
+    
+    
     @IBAction func onSwitchPublicPrivate(_ sender: Any) {
         if publicPrivateSelection.titleForSegment(at: publicPrivateSelection.selectedSegmentIndex) == "Private" {
             purchaseLabel.isHidden = false
@@ -111,21 +117,20 @@ class NewReviewViewController: UIViewController, UIImagePickerControllerDelegate
     
     @IBAction func onClickSubmit(_ sender: Any) {
         let review = PFObject(className: "Reviews")
-        let bathroom = PFObject(className: "Bathrooms")
+       
 
         let imageData = cameraView.image?.pngData()
         let file = PFFileObject(data:imageData!)
 
-        review.saveInBackground { (success, error) in
-            if success{
-                UserDefaults.standard.set(review.objectId, forKey: "bathroomID")
-                
+      
                 review["content"] = self.reviewTextField.text!
-                review["bathroomID"] = bathroom.objectId
+                review["bathroomID"] = UserDefaults.standard.string(forKey: "bathroomID")
                 review["image"] = file
                 review["author"] = PFUser.current()!
-                review.saveInBackground()
-                //self.performSegue(withIdentifier: "createdBathroomSegue", sender: nil)
+        
+        //self.performSegue(withIdentifier: "createdBathroomSegue", sender: nil)
+          review.saveInBackground { (success, error) in
+            if success{
                 print("saved")
             }else{
                 self.dismiss(animated: true, completion: nil)
@@ -134,6 +139,13 @@ class NewReviewViewController: UIViewController, UIImagePickerControllerDelegate
             }
         }
     }
+    
+    @IBAction func onClickCancel(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
     /*
     // MARK: - Navigation
 

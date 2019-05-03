@@ -29,20 +29,25 @@ class ReviewsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let user = review["author"] as! PFUser
         cell.nameLabel.text = user.username as! String
         cell.contentLabel.text = review["content"] as! String
+        let imageFile = review["image"] as! PFFileObject
+        let urlString = imageFile.url!
+        let url = URL(string: urlString)!
+        cell.bathroomImageView.af_setImage(withURL: url)
         
+   
         
 //        let imageFile = review["image"] as! PFFileObject
 //        let urlString = imageFile.url!
 //        let url = URL(string: urlString)!
-//        cell.bathroomImageView.af_setImage(withURL: url)
+//        cell.bathroomImageView.af_setImage(withURL: ur
         
         
         return cell
     }
     override func viewDidLoad() {
+        super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        super.viewDidLoad()
         
         tableView.rowHeight = 180
 
@@ -67,7 +72,7 @@ class ReviewsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self.bathroomImage.af_setImage(withURL: url)
                 let reviewQuery = PFQuery(className: "Reviews")
                 reviewQuery.whereKey("bathroomID", equalTo: bathroom?.objectId)
-                reviewQuery.includeKeys(["author", "content"])
+                reviewQuery.includeKeys(["author", "content", "image"])
                 reviewQuery.findObjectsInBackground{(reviews:[PFObject]?, error) in
                     self.reviews = reviews!
                     self.tableView.reloadData()
@@ -75,11 +80,14 @@ class ReviewsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
         }
-
         // Do any additional setup after loading the view.
     }
-    
 
+    
+    @IBAction func onClickBack(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 

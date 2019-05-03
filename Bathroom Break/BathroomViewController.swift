@@ -9,14 +9,25 @@
 import UIKit
 import Parse
 import AlamofireImage
+import MapKit
 
-class BathroomViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol LocationsViewControllerDelegate : class {
+    func locationsPickedLocation(controller: BathroomViewController, latitude: CLLocationDegrees, longitude: CLLocationDegrees)
+}
+
+
+class BathroomViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     
 
     var bathrooms = [PFObject]()
+    let CLIENT_ID = "QA1L0Z0ZNA2QVEEDHFPQWK0I5F1DE3GPLSNW4BZEBGJXUCFL"
+    let CLIENT_SECRET = "W2AOE1TYC4MHK5SZYOUGX0J3LVRALMPB4CXT3ZH21ZCPUMCU"
 
     @IBOutlet weak var tableView: UITableView!
+    weak var delegate : LocationsViewControllerDelegate!
+
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,18 +78,17 @@ class BathroomViewController: UIViewController, UITableViewDelegate, UITableView
     
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BathroomCell") as! BathroomCell
-        let bathroom = bathrooms[indexPath.row]
-
-        print("selected \(indexPath.row)")
-
+        
+        let cell:BathroomCell = tableView.cellForRow(at: indexPath) as! BathroomCell
+        UserDefaults.standard.set(cell.bathroomIDLabel.text, forKey: "bathroomID")
         //performSegue(withIdentifier: "ToReviews", sender: self)
 
     }
 
     
+    @IBAction func onClickBack(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
 //    func didSelect(indexPath: NSIndexPath) {
 //        performSegue(withIdentifier: "ToReviews", sender: nil)
