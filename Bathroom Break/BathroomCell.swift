@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class BathroomCell: UITableViewCell {
     
     @IBOutlet weak var bathroomImage: UIImageView!

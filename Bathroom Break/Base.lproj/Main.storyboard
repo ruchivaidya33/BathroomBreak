@@ -112,6 +112,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapView" destination="KTZ-Az-FIy" id="o3M-GI-bRx"/>
                         <segue destination="Zh9-CP-8tX" kind="show" identifier="newBathroomSegue" id="gwd-m4-mEW"/>
                     </connections>
                 </viewController>
@@ -626,7 +627,7 @@
             </objects>
             <point key="canvasLocation" x="873" y="1266"/>
         </scene>
-        <!--Bathroom View Controller-->
+        <!--Locations-->
         <scene sceneID="UuR-G8-ouD">
             <objects>
                 <viewController id="9lg-GG-F3z" customClass="BathroomViewController" customModule="Bathroom_Break" customModuleProvider="target" sceneMemberID="viewController">
@@ -720,18 +721,16 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Locations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fm1-z0-uyb">
-                                <rect key="frame" x="16" y="64" width="204" height="47"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="30"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z7N-Tp-Hdp">
+                                <rect key="frame" x="0.0" y="64" width="375" height="56"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="dxP-Fk-wvm"/>
                     </view>
-                    <navigationItem key="navigationItem" id="n9I-P1-8Jp">
+                    <navigationItem key="navigationItem" title="Locations" id="n9I-P1-8Jp">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="wXZ-ZV-e3V">
                             <connections>
                                 <action selector="onClickBack:" destination="9lg-GG-F3z" id="SZj-Of-bbi"/>
@@ -744,6 +743,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchBar" destination="z7N-Tp-Hdp" id="65T-pZ-XqS"/>
                         <outlet property="tableView" destination="aeW-n4-1aW" id="VTv-0I-rQU"/>
                     </connections>
                 </viewController>
@@ -1013,7 +1013,7 @@
         <image name="white_star" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gwd-m4-mEW"/>
-        <segue reference="4rq-pS-MFI"/>
+        <segue reference="siw-IE-nxq"/>
+        <segue reference="bPK-NM-eqI"/>
     </inferredMetricsTieBreakers>
 </document>

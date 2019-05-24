@@ -11,7 +11,7 @@ import Parse
 import AlamofireImage
 import MapKit
 
-protocol LocationsViewControllerDelegate : class {
+protocol BathroomViewControllerDelegate : class {
     func locationsPickedLocation(controller: BathroomViewController, latitude: CLLocationDegrees, longitude: CLLocationDegrees)
 }
 
@@ -21,12 +21,15 @@ class BathroomViewController: UIViewController, UITableViewDelegate, UITableView
     
 
     var bathrooms = [PFObject]()
+    var results: NSArray = []
+
     let CLIENT_ID = "QA1L0Z0ZNA2QVEEDHFPQWK0I5F1DE3GPLSNW4BZEBGJXUCFL"
     let CLIENT_SECRET = "W2AOE1TYC4MHK5SZYOUGX0J3LVRALMPB4CXT3ZH21ZCPUMCU"
 
     @IBOutlet weak var tableView: UITableView!
-    weak var delegate : LocationsViewControllerDelegate!
-
+    weak var delegate : BathroomViewControllerDelegate!
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     
     
     override func viewDidLoad() {
@@ -82,7 +85,28 @@ class BathroomViewController: UIViewController, UITableViewDelegate, UITableView
         let cell:BathroomCell = tableView.cellForRow(at: indexPath) as! BathroomCell
         UserDefaults.standard.set(cell.bathroomIDLabel.text, forKey: "bathroomID")
         //performSegue(withIdentifier: "ToReviews", sender: self)
+        
+        let venue = results[(indexPath as NSIndexPath).row] as! NSDictionary
+        
+        let lat = venue.value(forKeyPath: "location.lat") as! NSNumber
+        let lng = venue.value(forKeyPath: "location.lng") as! NSNumber
+        
+        let latString = "\(lat)"
+        let lngString = "\(lng)"
+        
+        print(latString + " " + lngString)
+        delegate.locationsPickedLocation(controller: self, latitude: CLLocationDegrees(lat), longitude: CLLocationDegrees(lng))
+        
+        // Return to the PhotoMapViewController
+        navigationController?.popViewController(animated: true)
 
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = NSString(string: searchBar.text!).replacingCharacters(in: range, with: text)
+        fetchLocations(newText)
+        
+        return true
     }
 
     
@@ -90,31 +114,33 @@ class BathroomViewController: UIViewController, UITableViewDelegate, UITableView
         self.dismiss(animated: true, completion: nil)
     }
     
-//    func didSelect(indexPath: NSIndexPath) {
-//        performSegue(withIdentifier: "ToReviews", sender: nil)
-//    }
-//
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let cell = sender as! UITableViewCell
-//        let indexPath = tableView.indexPath(for: cell)!
-//        let bathroom = bathrooms[indexPath.row]
-//
-//        let reviewsViewController = segue.destination as! ReviewsViewController
-//
-//        //reviewsViewController.bathroom = bathroom
-//
-//    }
-
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func fetchLocations(_ query: String, near: String = "San Francisco") {
+        let baseUrlString = "https://api.foursquare.com/v2/venues/search?"
+        let queryString = "client_id=\(CLIENT_ID)&client_secret=\(CLIENT_SECRET)&v=20141020&near=\(near),CA&query=\(query)"
+        
+        let url = URL(string: baseUrlString + queryString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!)!
+        let request = URLRequest(url: url)
+        
+        let session = URLSession(
+            configuration: URLSessionConfiguration.default,
+            delegate:nil,
+            delegateQueue:OperationQueue.main
+        )
+        
+        let task : URLSessionDataTask = session.dataTask(with: request,
+                                                         completionHandler: { (dataOrNil, response, error) in
+                                                            if let data = dataOrNil {
+                                                                if let responseDictionary = try! JSONSerialization.jsonObject(
+                                                                    with: data, options:[]) as? NSDictionary {
+                                                                    NSLog("response: \(responseDictionary)")
+                                                                    self.results = (responseDictionary.value(forKeyPath: "response.venues") as! NSArray)
+                                                                    self.tableView.reloadData()
+                                                                    
+                                                                }
+                                                            }
+        });
+        task.resume()
     }
-    */
+
 
 }
